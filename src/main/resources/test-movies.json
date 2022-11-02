@@ -1,0 +1,19 @@
+{
+  "movies": [
+    {
+      "id": "123456789",
+      "name": "Avatar",
+      "metadata": {
+        "category": "Adventure",
+        "releaseDate": "18.11.2009",
+        "actors": [
+          "Zoë Yadira Saldaña-Perego",
+          "Samuel Henry John Worthington",
+          "Susan Alexandra Weaver"
+        ],
+        "description": "some description",
+        "price": 1.99
+      }
+    }
+  ]
+}

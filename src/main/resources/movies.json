@@ -1,0 +1,19 @@
+{
+  "movies": [
+    {
+      "id": "fc471c82-33e9-43e6-bba4-24c04d489b07",
+      "name": "Avatar",
+      "metadata": {
+        "category": "Adventure",
+        "releaseDate": "18.11.2009",
+        "actors": [
+          "Zoë Yadira Saldaña-Perego",
+          "Samuel Henry John Worthington",
+          "Susan Alexandra Weaver"
+        ],
+        "description": "Jake, who is paraplegic, replaces his twin on the Na'vi inhabited Pandora for a corporate mission. After the natives accept him as one of their own, he must decide where his loyalties lie.",
+        "price": 1.99
+      }
+    }
+  ]
+}
