@@ -6,9 +6,11 @@ import lombok.Data;
 @Data
 public class Movie {
 
-    @JsonProperty("id")
+    @JsonProperty(value = "id")
     public String ID;
+    @JsonProperty(value = "name", required = true)
     public String name;
+    @JsonProperty(value = "metadata", required = true)
     public Metadata metadata;
 
 }

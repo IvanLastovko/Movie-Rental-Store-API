@@ -1,9 +1,7 @@
 package com.example.fujitsu.rental;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.fujitsu.rental.models.Movie;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -22,5 +20,11 @@ public class RentalController {
     @GetMapping(value = "/api/v1/movies/{id}", produces = "application/json")
     public String findMoviesById(@PathVariable String id) throws IOException {
         return rentalService.findMovie(id);
+    }
+
+    @PostMapping(value = "/api/v1/movies", produces = "application/json")
+    public String addMovieIntoList(@RequestParam() String adminKey,
+                                   @RequestBody Movie newMovie) throws IOException {
+        return rentalService.addMovie(adminKey, newMovie);
     }
 }

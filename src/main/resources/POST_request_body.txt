@@ -1,0 +1,15 @@
+{
+    "name": "It",
+    "metadata": {
+        "actors": [
+            "Bill Istvan Günther Skarsgård",
+            "Jaeden Martell",
+            "Finn Wolfhard"
+        ],
+        "description": "Seven helpless and bullied children are forced to face their worst nightmares when Pennywise, a shape-shifting clown, reappears. The clown, an ancient evil torments children before feeding on them.",
+        "category": "Horror",
+        "releaseDate": "08.09.2017",
+        "price": 1.99
+    }
+}
+
