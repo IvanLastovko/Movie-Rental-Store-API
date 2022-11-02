@@ -1,6 +1,7 @@
 package com.example.fujitsu.rental;
 
 import com.example.fujitsu.rental.models.Movie;
+import com.example.fujitsu.rental.models.RentalSpecs;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -23,8 +24,25 @@ public class RentalController {
     }
 
     @PostMapping(value = "/api/v1/movies", produces = "application/json")
-    public String addMovieIntoList(@RequestParam() String adminKey,
-                                   @RequestBody Movie newMovie) throws IOException {
+    public String addMovieIntoList(@RequestParam() String adminKey, @RequestBody Movie newMovie) throws IOException {
         return rentalService.addMovie(adminKey, newMovie);
     }
+
+    @PutMapping(value = "/api/v1/movies/{id}", produces = "application/json")
+    public String updateMovie(@RequestParam() String adminKey, @PathVariable String id, @RequestBody Movie movie) throws IOException {
+        return rentalService.updateMovie(adminKey, movie, id);
+    }
+
+    @DeleteMapping(value = "/api/v1/movies/{id}", produces = "application/json")
+    public String deleteMovie(@RequestParam() String adminKey, @PathVariable String id) throws IOException {
+        return rentalService.deleteMovie(adminKey, id);
+    }
+
+    @PostMapping(value = "/api/v1/rental/{id}", produces = "application/json")
+    public String bookMovie(@PathVariable String id, @RequestBody RentalSpecs rentalSpecs) throws IOException {
+        return rentalService.bookMovie(id, rentalSpecs);
+    }
+
+
+
 }
