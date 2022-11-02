@@ -6,6 +6,8 @@ import com.example.fujitsu.rental.utils.OverlappingChecker;
 import com.example.fujitsu.rental.utils.ReadJSONFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,19 @@ public class RentalService {
         }
     }
 
+    public double calculateMovieWeeklyPrice(String releaseDateStr){
+        DateTime currentDate = DateTime.now();
+        DateTime releaseDate = DateTimeFormat.forPattern("dd.MM.yyyy").parseDateTime(releaseDateStr);
+
+        int weeksSinceRelease = (int) Math.floor(currentDate.minus(releaseDate.getMillis()).getMillis()/604800000.0);
+        if(weeksSinceRelease < 52){
+            return 5.0;
+        } else if (weeksSinceRelease < 156) {
+            return 3.49;
+        }
+        return 1.99;
+    }
+
     public String addMovie(String adminKey, Movie newMovie) throws IOException {
         try {
             if (!AdminKeyScanner.validateKey(adminKey)) {
@@ -52,6 +67,7 @@ public class RentalService {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
             Movies movies = ReadJSONFile.readMovies("movies.json");
             newMovie.setID(UUID.randomUUID().toString());
+            newMovie.getMetadata().setPrice(calculateMovieWeeklyPrice(newMovie.getMetadata().getReleaseDate()));
             movies.movieList.add(newMovie);
 
             Resource resource = new ClassPathResource("movies.json");
@@ -83,6 +99,7 @@ public class RentalService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie does not exist!!!");
             }
 
+            movie.getMetadata().setPrice(calculateMovieWeeklyPrice(movie.getMetadata().getReleaseDate()));
             movies.movieList.add(movie);
 
             Resource resource = new ClassPathResource("movies.json");
@@ -128,7 +145,7 @@ public class RentalService {
         return false;
     }
 
-    public double calculateRantCost(String duration, double price)
+    public double calculateRentCost(String duration, double price)
     {
         return Math.ceil(Float.parseFloat(duration)/7.0)*price;
     }
@@ -159,7 +176,7 @@ public class RentalService {
             new ObjectMapper().writeValue(resource.getFile(), rentals);
 
 
-            return "Your booking was successful! It will cost you " + calculateRantCost(rentalSpecs.duration, movie.metadata.getPrice());
+            return "Your booking was successful! It will cost you " + calculateRentCost(rentalSpecs.duration, movie.metadata.getPrice());
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);

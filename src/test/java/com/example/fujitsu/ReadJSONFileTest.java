@@ -77,4 +77,12 @@ public class ReadJSONFileTest {
         System.out.println(time1_end.minus(time1_start.getMillis()));
         System.out.println(time1_end.isBefore(time2_start));
     }
+
+    @Test
+    public void calculateWeeklyPrice(){
+        DateTime currentDate = DateTime.now();
+        DateTime releaseDate = DateTimeFormat.forPattern("dd.MM.yyyy").parseDateTime("18.11.2009");
+
+        System.out.println((int) Math.floor(currentDate.minus(releaseDate.getMillis()).getMillis()/604800000.0));
+    }
 }

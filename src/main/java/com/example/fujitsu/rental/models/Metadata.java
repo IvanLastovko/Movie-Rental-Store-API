@@ -14,7 +14,6 @@ public class Metadata {
     public String releaseDate;
     public List<String> actors;
     public String description;
-    @JsonProperty(value = "price", required = true)
     public double price;
 
 }
