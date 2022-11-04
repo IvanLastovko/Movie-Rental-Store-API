@@ -150,7 +150,7 @@ public class RentalService {
         return Math.ceil(Float.parseFloat(duration)/7.0)*price;
     }
 
-    public String bookMovie(String id, RentalSpecs rentalSpecs) throws IOException {
+    public String bookMovie(String id, RentalSpecs rentalSpecs) {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
