@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -45,12 +46,12 @@ public class RentalService {
         }
     }
 
-    public double calculateMovieWeeklyPrice(String releaseDateStr){
+    public double calculateMovieWeeklyPrice(String releaseDateStr) {
         DateTime currentDate = DateTime.now();
         DateTime releaseDate = DateTimeFormat.forPattern("dd.MM.yyyy").parseDateTime(releaseDateStr);
 
-        int weeksSinceRelease = (int) Math.floor(currentDate.minus(releaseDate.getMillis()).getMillis()/604800000.0);
-        if(weeksSinceRelease < 52){
+        int weeksSinceRelease = (int) Math.floor(currentDate.minus(releaseDate.getMillis()).getMillis() / 604800000.0);
+        if (weeksSinceRelease < 52) {
             return 5.0;
         } else if (weeksSinceRelease < 156) {
             return 3.49;
@@ -139,15 +140,13 @@ public class RentalService {
         }
     }
 
-    public boolean isAnyTrue(List<Boolean> array)
-    {
-        for(boolean b : array) if(b) return true;
+    public boolean isAnyTrue(List<Boolean> array) {
+        for (boolean b : array) if (b) return true;
         return false;
     }
 
-    public double calculateRentCost(String duration, double price)
-    {
-        return Math.ceil(Float.parseFloat(duration)/7.0)*price;
+    public double calculateRentCost(String duration, double price) {
+        return Math.ceil(Float.parseFloat(duration) / 7.0) * price;
     }
 
     public String bookMovie(String id, RentalSpecs rentalSpecs) {
@@ -155,16 +154,32 @@ public class RentalService {
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
 
-            Rentals rentals = ReadJSONFile.readRentals("rentals.json");
-            Rental movieRental = rentals.rentalList.stream().filter(rent -> Objects.equals(rent.getID(), id)).toList().get(0);
+            Rentals rentals = new Rentals();
+            if(new ClassPathResource("rentals.json").getFile().length() > 0){
+                rentals = ReadJSONFile.readRentals("rentals.json");
+            } else{
+                rentals.setRentalList(new ArrayList<>());
+            }
+
+            List<Rental> movieRentalsList = rentals.getRentalList().stream().filter(rent -> Objects.equals(rent.getID(), id)).toList();
+
+            Rental movieRental = new Rental();
+
+            if (movieRentalsList.size() > 0) {
+
+                movieRental = movieRentalsList.get(0);
+            } else {
+                movieRental.setDates(new ArrayList<String>());
+                movieRental.setID(id);
+            }
             Movie movie = objectMapper.readValue(findMovie(id), Movie.class);
 
             List<Boolean> overlappingDates = movieRental.dates.stream().map(date ->
                     OverlappingChecker.checkIfOverlap(date.split("\\|")[0],
-                    date.split("\\|")[1],
-                    rentalSpecs.getStartDate(),
-                    rentalSpecs.getDuration())).toList();
-            if(isAnyTrue(overlappingDates)){
+                            date.split("\\|")[1],
+                            rentalSpecs.getStartDate(),
+                            rentalSpecs.getDuration())).toList();
+            if (isAnyTrue(overlappingDates)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Cannot rent for these dates. Movie is already booked!");
             }
