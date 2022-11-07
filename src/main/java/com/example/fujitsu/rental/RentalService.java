@@ -154,12 +154,7 @@ public class RentalService {
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
 
-            Rentals rentals = new Rentals();
-            if(new ClassPathResource("rentals.json").getFile().length() > 0){
-                rentals = ReadJSONFile.readRentals("rentals.json");
-            } else{
-                rentals.setRentalList(new ArrayList<>());
-            }
+            Rentals rentals = ReadJSONFile.readRentals("rentals.json");
 
             List<Rental> movieRentalsList = rentals.getRentalList().stream().filter(rent -> Objects.equals(rent.getID(), id)).toList();
 
@@ -192,6 +187,16 @@ public class RentalService {
 
 
             return "Your booking was successful! It will cost you " + calculateRentCost(rentalSpecs.duration, movie.metadata.getPrice());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+        }
+    }
+
+    public String getRentals() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
+            return objectMapper.writeValueAsString(ReadJSONFile.readRentals("rentals.json"));
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);

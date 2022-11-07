@@ -43,6 +43,9 @@ public class RentalController {
         return rentalService.bookMovie(id, rentalSpecs);
     }
 
-
+    @GetMapping(value = "/api/v1/rentals", produces = "application/json")
+    public String returnListOfMoviesByGenre() throws IOException {
+        return rentalService.getRentals();
+    }
 
 }

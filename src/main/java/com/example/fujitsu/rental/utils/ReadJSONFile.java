@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ReadJSONFile {
 
@@ -23,6 +24,13 @@ public class ReadJSONFile {
         Resource resource = new ClassPathResource(path);
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
 
-        return objectMapper.readValue(resource.getFile(), Rentals.class);
+        Rentals rentals = new Rentals();
+        if(resource.getFile().length() > 0){
+            rentals = objectMapper.readValue(resource.getFile(), Rentals.class);
+        } else{
+            rentals.setRentalList(new ArrayList<>());
+        }
+
+        return rentals;
     }
 }
