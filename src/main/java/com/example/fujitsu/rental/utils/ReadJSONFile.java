@@ -1,7 +1,6 @@
 package com.example.fujitsu.rental.utils;
 
 import com.example.fujitsu.rental.models.Movies;
-import com.example.fujitsu.rental.models.Rental;
 import com.example.fujitsu.rental.models.Rentals;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -25,9 +24,9 @@ public class ReadJSONFile {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
 
         Rentals rentals = new Rentals();
-        if(resource.getFile().length() > 0){
+        if (resource.getFile().length() > 0) {
             rentals = objectMapper.readValue(resource.getFile(), Rentals.class);
-        } else{
+        } else {
             rentals.setRentalList(new ArrayList<>());
         }
 

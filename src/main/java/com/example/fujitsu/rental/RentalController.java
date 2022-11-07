@@ -29,22 +29,22 @@ public class RentalController {
     }
 
     @PutMapping(value = "/api/v1/movies/{id}", produces = "application/json")
-    public String updateMovie(@RequestParam() String adminKey, @PathVariable String id, @RequestBody Movie movie) throws IOException {
+    public String updateMovie(@RequestParam() String adminKey, @PathVariable String id, @RequestBody Movie movie) {
         return rentalService.updateMovie(adminKey, movie, id);
     }
 
     @DeleteMapping(value = "/api/v1/movies/{id}", produces = "application/json")
-    public String deleteMovie(@RequestParam() String adminKey, @PathVariable String id) throws IOException {
+    public String deleteMovie(@RequestParam() String adminKey, @PathVariable String id) {
         return rentalService.deleteMovie(adminKey, id);
     }
 
     @PostMapping(value = "/api/v1/rental/{id}", produces = "application/json")
-    public String bookMovie(@PathVariable String id, @RequestBody RentalSpecs rentalSpecs) throws IOException {
+    public String bookMovie(@PathVariable String id, @RequestBody RentalSpecs rentalSpecs) {
         return rentalService.bookMovie(id, rentalSpecs);
     }
 
     @GetMapping(value = "/api/v1/rentals", produces = "application/json")
-    public String returnListOfMoviesByGenre() throws IOException {
+    public String returnListOfMoviesByGenre() {
         return rentalService.getRentals();
     }
 

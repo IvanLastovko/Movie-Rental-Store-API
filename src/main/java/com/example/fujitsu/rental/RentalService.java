@@ -62,7 +62,8 @@ public class RentalService {
     public String addMovie(String adminKey, Movie newMovie) throws IOException {
         try {
             if (!AdminKeyScanner.validateKey(adminKey)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have permissions to add new movies!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have " +
+                        "permissions to add new movies!");
             }
 
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
@@ -77,7 +78,8 @@ public class RentalService {
             return objectMapper.writeValueAsString(newMovie);
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
         }
     }
 
@@ -85,11 +87,13 @@ public class RentalService {
 
         try {
             if (!AdminKeyScanner.validateKey(adminKey)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have permissions to add new movies!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have " +
+                        "permissions to add new movies!");
             }
 
             if (!id.equals(movie.ID)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "IDs in request URL and body do not match!!!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "IDs in request URL and body do not " +
+                        "match!!!");
             }
 
 
@@ -109,7 +113,8 @@ public class RentalService {
             return objectMapper.writeValueAsString(movie);
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
         }
 
     }
@@ -118,7 +123,8 @@ public class RentalService {
 
         try {
             if (!AdminKeyScanner.validateKey(adminKey)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have permissions to add new movies!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Admin key! You do not have " +
+                        "permissions to add new movies!");
             }
 
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
@@ -136,7 +142,8 @@ public class RentalService {
             return objectMapper.writeValueAsString(movie);
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
         }
     }
 
@@ -156,7 +163,8 @@ public class RentalService {
 
             Rentals rentals = ReadJSONFile.readRentals("rentals.json");
 
-            List<Rental> movieRentalsList = rentals.getRentalList().stream().filter(rent -> Objects.equals(rent.getID(), id)).toList();
+            List<Rental> movieRentalsList =
+                    rentals.getRentalList().stream().filter(rent -> Objects.equals(rent.getID(), id)).toList();
 
             Rental movieRental = new Rental();
 
@@ -169,14 +177,12 @@ public class RentalService {
             }
             Movie movie = objectMapper.readValue(findMovie(id), Movie.class);
 
-            List<Boolean> overlappingDates = movieRental.dates.stream().map(date ->
-                    OverlappingChecker.checkIfOverlap(date.split("\\|")[0],
-                            date.split("\\|")[1],
-                            rentalSpecs.getStartDate(),
-                            rentalSpecs.getDuration())).toList();
+            List<Boolean> overlappingDates =
+                    movieRental.dates.stream().map(date -> OverlappingChecker.checkIfOverlap(date.split("\\|")[0],
+                            date.split("\\|")[1], rentalSpecs.getStartDate(), rentalSpecs.getDuration())).toList();
             if (isAnyTrue(overlappingDates)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Cannot rent for these dates. Movie is already booked!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot rent for these dates. Movie is " +
+                        "already booked!");
             }
 
             movieRental.dates.add(rentalSpecs.startDate + "|" + rentalSpecs.duration);
@@ -186,10 +192,12 @@ public class RentalService {
             new ObjectMapper().writeValue(resource.getFile(), rentals);
 
 
-            return "Your booking was successful! It will cost you " + calculateRentCost(rentalSpecs.duration, movie.metadata.getPrice());
+            return "Your booking was successful! It will cost you " + calculateRentCost(rentalSpecs.duration,
+                    movie.metadata.getPrice());
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
         }
     }
 
@@ -199,7 +207,8 @@ public class RentalService {
             return objectMapper.writeValueAsString(ReadJSONFile.readRentals("rentals.json"));
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
         }
     }
 }
