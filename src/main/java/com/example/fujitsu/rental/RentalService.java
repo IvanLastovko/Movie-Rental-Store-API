@@ -26,13 +26,18 @@ public class RentalService {
 
 
     public String getMovies(String category) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
-        List<Movie> movieList = ReadJSONFile.readMovies("movies.json").movieList;
-        if (category == null) {
-            return objectMapper.writeValueAsString(movieList);
-        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
+            List<Movie> movieList = ReadJSONFile.readMovies("movies.json").movieList;
+            if (category == null) {
+                return objectMapper.writeValueAsString(movieList);
+            }
 
-        return objectMapper.writeValueAsString(movieList.stream().filter(mov -> Objects.equals(mov.metadata.getCategory(), category)).collect(Collectors.toList()));
+            return objectMapper.writeValueAsString(movieList.stream().filter(mov -> Objects.equals(mov.metadata.getCategory(), category)).collect(Collectors.toList()));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OOPS... Something is wrong with your request!"
+                    , e);
+        }
     }
 
     public String findMovie(String id) throws IOException {

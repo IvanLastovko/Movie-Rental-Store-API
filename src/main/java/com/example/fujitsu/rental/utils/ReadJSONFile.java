@@ -16,7 +16,14 @@ public class ReadJSONFile {
         Resource resource = new ClassPathResource(path);
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
 
-        return objectMapper.readValue(resource.getFile(), Movies.class);
+        Movies movies = new Movies();
+        if(resource.getFile().length() > 0){
+            movies = objectMapper.readValue(resource.getFile(), Movies.class);
+        } else {
+            movies.setMovieList(new ArrayList<>());
+        }
+
+        return movies;
     }
 
     public static Rentals readRentals(String path) throws IOException {
